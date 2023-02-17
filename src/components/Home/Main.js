@@ -1,9 +1,12 @@
 import React from 'react'
+import { Text, View } from 'react-native'
 
-const Main = ({ navigation }) => {
+const Main = () => {
     return (
-        <div>Main</div>
+        <View>
+            <Text>Home Page </Text>
+        </View>
+
     )
 }
-
 export default Main

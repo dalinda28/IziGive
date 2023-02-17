@@ -1,10 +1,18 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import Index from '../components/Navigation/Navigation'
+
+const Stack = createStackNavigator();
 
 const NavigatePage = () => {
     return (
-        <Text>NavigatePage</Text>
+        <Stack.Navigator screenOptions={{
+            headerShown: false,
+        }}>
+            <Stack.Screen name="Index" component={Index} />
+        </Stack.Navigator>
+
     )
 }
 
-export default NavigatePage
+export default NavigatePage;

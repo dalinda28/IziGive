@@ -56,6 +56,7 @@ const App = () => {
             }
             return <Ionicons name={iconName} size={40} color={color} />;
           },
+          headerShown: false,
           tabBarActiveBackgroundColor: "rgba(21, 170, 73, 0.5)",
           tabBarInactiveBackgroundColor: "#f8f8f8",
           tabBarActiveTintColor: "white",
@@ -77,7 +78,7 @@ const App = () => {
             right: 40,
             bottom: 40,
             ...styles.shadow
-          },
+          }
         })}
       >
         <Tabs.Screen name="HomePage">
