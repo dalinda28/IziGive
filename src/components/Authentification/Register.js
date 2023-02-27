@@ -2,11 +2,39 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../Firebase/firebase"
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    const signUp = async () => {
+        try {
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log(user.email)
+                })
+            return navigation.navigate('Login');
+        }
+        catch (err) {
+            switch (err.code) {
+                case 'auth/invalid-email':
+                    return Alert.alert('Saisissez un e-mail valide');
+                    break;
+                case 'auth/email-already-in-use':
+                    return Alert.alert('Un compte IziGo associé à cet e-mail existe déja. Veuillez recommencer.');
+                    break;
+                case 'auth/weak-password':
+                    return Alert.alert('Le mot de passe doit comprendre au moins 6 caractères.');
+                    break;
+            }
+            console.log(err.code);
+            return navigation.navigate('Register');
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -16,25 +44,17 @@ const Register = ({ navigation }) => {
             />
             <Text style={styles.title}>Inscription</Text>
             <TextInput
-                placeholder={'Nom complet'}
-                onChangeText={setEmail}
-                style={styles.inputStyle}
-                keyboardType="email-address"
-                returnKeyType='go'
-            />
-            <TextInput
+                value={email}
                 placeholder={'Email'}
                 onChangeText={setEmail}
                 style={styles.inputStyle}
-                keyboardType="email-address"
-                returnKeyType='go'
             />
             <TextInput
+                value={password}
                 placeholder={'Mot de passe'}
                 onChangeText={setPassword}
                 style={styles.inputStyle}
                 secureTextEntry={true}
-                returnKeyType='go'
             />
             <View style={styles.CheckboxStyle}>
                 <BouncyCheckbox
