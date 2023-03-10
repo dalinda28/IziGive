@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { auth } from "../../Firebase/firebase"
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = ({ navigation }) => {
 
@@ -16,6 +17,7 @@ const Login = ({ navigation }) => {
                     const user = userCredential.user;
                     console.log(user.email)
                 });
+            return navigation.navigate('HomePage');
         }
         catch (err) {
             switch (err.code) {
@@ -37,14 +39,7 @@ const Login = ({ navigation }) => {
         }
     }
 
-    useEffect(() => {
-        auth().onAuthStateChanged((user) => {
-            if (user != null) {
-                console.log(user)
-                navigation.navigate('HomePage');
-            }
-        })
-    }, []);
+
     return (
         <View style={styles.container}>
             <Image

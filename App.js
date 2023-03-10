@@ -4,10 +4,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import HomePage from "./src/containers/HomePage";
-import AccountPage from "./src/containers/AccountPage";
-import FavoritePage from "./src/containers/FavoritePage";
-import NavigatePage from "./src/containers/NavigatePage";
+import AccountPage from './src/screens/AccountPage';
+import FavoritePage from './src/screens/FavoritePage';
+import HomePage from './src/screens/HomePage';
+import NavigatePage from './src/screens/NavigatePage';
 
 const Tabs = createBottomTabNavigator();
 
@@ -82,16 +82,16 @@ const App = () => {
         })}
       >
         <Tabs.Screen name="HomePage">
-          {(props) => <HomePage {...props} />}
+          {(props) => <HomePage />}
         </Tabs.Screen>
         <Tabs.Screen name="NavigatePage">
-          {(props) => <NavigatePage {...props} />}
+          {(props) => <NavigatePage />}
         </Tabs.Screen>
         <Tabs.Screen name="FavoritePage">
-          {(props) => <FavoritePage {...props} />}
+          {(props) => <FavoritePage />}
         </Tabs.Screen>
         <Tabs.Screen name="AccountPage">
-          {(props) => <AccountPage {...props} />}
+          {(props) => <AccountPage />}
         </Tabs.Screen>
 
       </Tabs.Navigator>

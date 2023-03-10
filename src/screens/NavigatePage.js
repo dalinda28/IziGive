@@ -1,18 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Main from '../components/Home/Main'
+import Navigation from '../components/Navigation/Navigation'
 
 const Stack = createStackNavigator();
 
-const HomePage = () => {
+const NavigatePage = () => {
     return (
         <Stack.Navigator screenOptions={{
             headerShown: false,
         }}>
-            <Stack.Screen name="Main" component={Main} />
+            <Stack.Screen name="Navigation" component={Navigation} />
         </Stack.Navigator>
 
     )
 }
 
-export default HomePage;
+export default NavigatePage;
