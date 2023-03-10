@@ -1,12 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { auth } from "../../Firebase/firebase"
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+
+    const signIn = async () => {
+        try {
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log(user.email)
+                });
+            return navigation.navigate('HomePage');
+        }
+        catch (err) {
+            switch (err.code) {
+                case 'auth/invalid-email':
+                    return Alert.alert('Saisissez un e-mail valide');
+                    break;
+                case 'auth/user-not-found':
+                    return Alert.alert('Impossible de trouver un compte IziGo associé à cet e-mail. Veuillez recommencer.');
+                    break;
+                case 'auth/wrong-password':
+                    return Alert.alert('Le mot de passe est incorrect. Réessayez ou identifiez-vous avec les réseaux sociaux.');
+                    break;
+                case 'auth/invalid-uid':
+                    return Alert.alert('Compte non trouvé');
+                    break;
+            }
+            console.log(err.code);
+            return navigation.navigate('Login');
+        }
+    }
+
+
     return (
         <View style={styles.container}>
             <Image
@@ -15,12 +48,14 @@ const Login = ({ navigation }) => {
             />
             <Text style={styles.title}>Se connecter</Text>
             <TextInput
+                value={email}
                 placeholder={'Email, Nom d\'utilisateur'}
                 onChangeText={setEmail}
                 style={styles.inputStyle}
                 keyboardType="email-address"
             />
             <TextInput
+                value={password}
                 placeholder={'Mot de passe'}
                 style={styles.inputStyle}
                 secureTextEntry={true}
