@@ -1,50 +1,46 @@
-import React from 'react';
-import { useEffect, useState } from "react"
-
-
-import { StyleSheet, View, FlatList, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, SafeAreaView, ScrollView } from "react-native";
 import { createStackNavigator } from '@react-navigation/stack';
-import Main from '../components/Home'
-import axios from "axios"
-const Stack = createStackNavigator();
+import Main from '../components/Home/Main'
+import Search from '../components/Home/SearchBar'
+import Categories from '../components/Home/Categories'
+import RestaurantItem, { localRestaurant } from '../components/Home/RestaurantItem'
+
+const YELP_API_KEY = "dh-ilvDFreUKZR8idugS0a0JIvU7KhDE5BeasoYfyjcqsCeMAfRbEsgOkxH79XAnk7izgUXIwinpguu6HlC7M8xxIx0fIu4sdNbBnXCqBWzRFECIMB_bqGGcnWYZZHYx"
 
 const HomePage = () => {
-    const [dataItem, setdataItem] = useState([]);
+    const [restaurantData, setRestaurantData] = useState(localRestaurant)
+    const [city, setCity] = useState("Paris")
 
-    const getData = async () => {
-        try {
-            const resp = await axios.get(`https://data.enseignementsup-recherche.gouv.fr/api/records/1.0/search/?dataset=fr_crous_restauration_france_entiere&q=&facet=type&facet=zone`
-                , {
-                    headers: {
-                        "Access-Control-Allow-Origin": "http://localhost:19006/",
-                        "Access-Control-Allow-Credentials": true,
-                        "Content-Type": "application/json"
-                    }
-                })
-            return resp.data.records;
-
-        } catch (err) {
-            console.log(err);
+    const getRestaurantFromYelp = () => {
+        const yelpurl = `https://api.yelp.com/v3/businesses/search?term=restaurant&location=${city}`;
+        const apiOptions = {
+            headers: {
+                Authorization: `Bearer ${YELP_API_KEY}`
+            }
         }
-    }
+        return fetch(yelpurl, apiOptions)
+            .then((res) => res.json()
+                .then(json => setRestaurantData(json.businesses)));
+    };
+    useEffect(() => {
+        getRestaurantFromYelp();
+    }, [city])
 
-    getData()
+
     return (
-        <View>
-            <Text>Home Page </Text>
-            {dataItem.map(data => <Text>{data.fields.geolocalisation}</Text>)}
-
-        </View>
+        <SafeAreaView>
+            <View>
+                <Main />
+                <Search cityHandler={setCity} />
+            </View>
+            <ScrollView showsHorizontalScrollIndicator={false}>
+                <Categories />
+                <RestaurantItem restaurantData={restaurantData} />
+            </ScrollView>
+        </SafeAreaView>
 
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        margin: 1
-    }
-})
 
 export default HomePage;
