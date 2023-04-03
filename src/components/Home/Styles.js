@@ -4,40 +4,12 @@ export const styles = StyleSheet.create({
     search: {
         width: '100%',
         height: 114,
-        backgroundColor: '#15AA49'
-    },
-
-    searchContainer: {
-        position: 'absolute',
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "white",
-        shadowColor: 'rgba(0, 0, 0, 0.25)',
-        shadowOpacity: 0.25,
-        shadowRadius: 5,
-        borderRadius: 50,
-        width: 300,
-        height: 50,
-        top: 40,
-        paddingLeft: 10,
-        paddingRight: 0,
-        marginLeft: "10%",
-        shadowOffset: { width: 2, height: 2, },
-        shadowColor: 'grey',
-        shadowOpacity: 1.0,
-        shadowRadius: 2,
-    },
-    searchInput: {
-        flex: 1,
-        color: "#818181",
-        left: 15,
+        backgroundColor: '#15AA49',
+        flexDirection: "row"
     },
 
     searchIcon: {
-        display: "flex",
-        left: 5,
-        zIndex: 2
+
     },
 
     categorieContainer: {
@@ -65,5 +37,34 @@ export const styles = StyleSheet.create({
         color: "white",
         fontWeight: 'bold',
         marginLeft: 15,
+    },
+
+    /* Restaurantitem */
+
+    RestaurantItem: {
+        flexDirection: "row",
+        margin: 20,
+    },
+
+    RestaurantItemContainer: {
+        width: 200,
+        height: 280,
+        borderRadius: 24,
+        borderWidth: 1,
+        borderColor: '#E1E1E1',
+        backgroundColor: "white"
+    },
+
+    RestaurantInfoContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 15,
+    },
+    RestaurantImage: {
+        width: "100%",
+        height: 180,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24
     }
 })
