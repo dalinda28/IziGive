@@ -12,8 +12,7 @@
 
 *firebase/* Folder to configure Firebase
 
-*components/*
-Shared components used across features are placed in this directory. An example of such is the layout component, which is used to wrap the application components and determine its overall layout.
+*components/* Shared components used across features are placed in this directory. An example of such is the layout component, which is used to wrap the application components and determine its overall layout.
 
 *navigation/* Project base navigation goes here. We can create stack navigator and export it to our application.
 
@@ -26,16 +25,13 @@ Shared components used across features are placed in this directory. An example 
 - trader
 
 **Pages description**
+
 *components/home*
 
-- Search.js: page to search an trarder by input with an address
+- SearchBar.js: page to search an trarder by input with an address
 - Main.js: Home page
 
 *components/authentification*
 
-Login.js: page to loggin
-Register.js: page to register
-
-*components/favorites*
-
-- FavoriteList.js: list of favorite posting of logged user
+- Login.js: page to loggin
+- Register.js: page to register
