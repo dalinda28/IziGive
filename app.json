@@ -26,8 +26,24 @@
         "backgroundColor": "#FFFFFF"
       }
     },
+    "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Autoriser l'utilisation de la localisation pour afficher les restaurants autour de vous"
+      },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }
+    }, 
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ],
+    "permissions": {
+      "location": {
+        "allowsBackgroundLocationUpdates": false
+      }
+    },
   }
 }

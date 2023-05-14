@@ -38,16 +38,16 @@ export const styles = StyleSheet.create({
         zIndex: 2
     },
 
-    map: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height
+    mapContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     marker: {
         alignItems: "center",
         justifyContent: "center",
     },
-
     bubble: {
         flexDirection: "column",
         backgroundColor: "#ffff",

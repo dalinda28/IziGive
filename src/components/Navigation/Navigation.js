@@ -1,82 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { styles } from "./Styles";
-import { useState } from "react";
-import MapView, { Marker } from "react-native-maps"
-import { View, Text, ScrollView, Image, Callout } from 'react-native';
-import axios from "axios";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import MapView, { Marker } from 'react-native-maps';
+import axios from 'axios';
+
+const API_TOKEN = 'dh-ilvDFreUKZR8idugS0a0JIvU7KhDE5BeasoYfyjcqsCeMAfRbEsgOkxH79XAnk7izgUXIwinpguu6HlC7M8xxIx0fIu4sdNbBnXCqBWzRFECIMB_bqGGcnWYZZHYx';
 
 const Navigation = () => {
-    const [dataItem, setdataItem] = useState([]);
+    const [markers, setMarkers] = useState([]);
 
-    const getData = async () => {
+    useEffect(() => {
+        fetchMarkers();
+    }, []);
+
+    const fetchMarkers = async () => {
         try {
-            const resp = await axios.get(`https://data.enseignementsup-recherche.gouv.fr/api/records/1.0/search/?dataset=fr_crous_restauration_france_entiere&q=&facet=type&facet=zone`
-                , {
-                    headers: {
-                        "Access-Control-Allow-Origin": "http://localhost:19006/",
-                        "Access-Control-Allow-Credentials": true,
-                        "Content-Type": "application/json"
-                    }
-                })
-            return resp.data.records;
+            const city = 'Paris'; // Remplace avec la ville de ton choix
+            const url = `https://api.yelp.com/v3/businesses/search?term=restaurant&location=${city}`;
 
-        } catch (err) {
-            console.log(err);
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${API_TOKEN}`,
+                },
+            });
+
+            const data = response.data.businesses.map(business => ({
+                latitude: business.coordinates.latitude,
+                longitude: business.coordinates.longitude,
+                title: business.name,
+                description: business.categories.map(category => category.title).join(', '),
+            }));
+
+            setMarkers(data);
+        } catch (error) {
+            console.error(error);
         }
-    }
-
-    getData()
+    };
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.searchContainer}>
-                <View style={styles.searchIcon}>
-                    <Ionicons name="search-outline" size={19} color="white" />
-                </View>
-                <Text onPress={() => navigation.navigate("Search")} style={styles.searchInput}>Où allons-nous ?</Text>
-            </View>
-
-            <MapView
-                style={styles.map}
-                provider={MapView.PROVIDER_GOOGLE}
-                initialRegion={{
-                    latitude: 48.85534,
-                    longitude: 2.43038,
-                    latitudeDelta: 0.09,
-                    longitudeDelta: 0.19
-                }}
-            >
-                {dataItem.map((marker, index) => {
-                    return (
-                        <Marker
-                            style={styles.marker}
-                            key={index}
-                            coordinate={{
-                                latitude: marker.geometry.coordinates[0],
-                                longitude: marker.geometry.coordinates[1]
-                            }}
-                            title={'title'}
-                            image={require('../../assets/Location.png')}
-                            description={'description'}>
-                            <Callout tooltip>
-                                <View>
-                                    <View style={styles.bubble}>
-                                        <Image
-                                            style={styles.bubbleImage}
-                                            source={require('../../assets/Food.png')} />
-                                        <Text style={styles.bubbleTitle}>{marker.fields.title}</Text>
-                                    </View>
-                                    <View style={styles.arrowBorder}></View>
-                                </View>
-                            </Callout>
-                        </Marker>
-                    )
-                })
-                }
-            </MapView >
-        </ScrollView >
-    )
-}
-
-export default Navigation
+        <View style={styles.mapContainer}>
+            <MapView style={styles.map} initialRegion={{ latitude: 48.8566, longitude: 2.3522, latitudeDelta: 0.1, longitudeDelta: 0.1 }}>
+                {markers.map((marker, index) => (
+                    <Marker
+                        key={index}
+                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+                        title={marker.title}
+                        description={marker.description}
+                    />
+                ))}
+            </MapView>
+        </View>
+    );
+};
+export default Navigation;
