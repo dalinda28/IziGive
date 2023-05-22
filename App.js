@@ -8,7 +8,6 @@ import AccountPage from './src/screens/AccountPage';
 import FavoritePage from './src/screens/FavoritePage';
 import HomePage from './src/screens/HomePage';
 import NavigatePage from './src/screens/NavigatePage';
-import RestaurantDetails from './src/screens/RestaurantDetails';
 
 const Tabs = createBottomTabNavigator();
 
@@ -94,10 +93,6 @@ const App = () => {
         <Tabs.Screen name="AccountPage">
           {(props) => <AccountPage />}
         </Tabs.Screen>
-        <Tabs.Screen name="RestaurantDetails">
-          {(props) => <RestaurantDetails />}
-        </Tabs.Screen>
-
       </Tabs.Navigator>
     </NavigationContainer >
   );

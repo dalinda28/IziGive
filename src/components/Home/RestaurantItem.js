@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { styles } from "./Styles";
 import MaterialCommunityIcons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from "@react-navigation/native"
+import About from '../RestaurantDetails/About';
+
 export const localRestaurant = [
     {
         name: "Beachside Bar",
@@ -42,7 +44,7 @@ export default function RestaurantItem({ ...props }) {
                     key={index}
                     activeOpacity={1}
                     onPress={() => {
-                        navigation.navigate('RestaurantDetails', {
+                        navigation.navigate('about', {
                             name: restaurant.name,
                             image: restaurant.image_url,
                             price: restaurant.price,

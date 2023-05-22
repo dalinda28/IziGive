@@ -43,7 +43,9 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-
+    map: {
+        flex: 1,
+    },
     marker: {
         alignItems: "center",
         justifyContent: "center",

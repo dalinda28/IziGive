@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         height: "50%",
         top: "20%",
-        fontFamily: 'Roboto',
+        fontFamily: 'NunitoBold',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: 42,

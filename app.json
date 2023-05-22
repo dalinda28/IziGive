@@ -21,17 +21,18 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
-    "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Autoriser l'utilisation de la localisation pour afficher les restaurants autour de vous"
-      },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }, 
+    },
     "plugins": [
       [
         "expo-location",
@@ -44,6 +45,6 @@
       "location": {
         "allowsBackgroundLocationUpdates": false
       }
-    },
+    }
   }
 }
