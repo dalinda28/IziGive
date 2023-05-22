@@ -21,6 +21,10 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +32,19 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ],
+    "permissions": {
+      "location": {
+        "allowsBackgroundLocationUpdates": false
+      }
     }
   }
 }

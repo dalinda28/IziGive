@@ -2,6 +2,8 @@ import React from 'react'
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { styles } from "./Styles";
 import MaterialCommunityIcons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from "@react-navigation/native"
+import About from '../RestaurantDetails/About';
 
 export const localRestaurant = [
     {
@@ -32,19 +34,28 @@ export const localRestaurant = [
         rating: 4.9,
     },
 ]
-const RestaurantItem = (props, index) => {
+export default function RestaurantItem({ ...props }) {
+    const navigation = useNavigation();
     return (
         <ScrollView horizontal
             showsHorizontalScrollIndicator={false} >
             {props.restaurantData.map((restaurant, index) => (
-                < TouchableOpacity
+                <TouchableOpacity
                     key={index}
-                    activeO pacity={1}
-                    onPress={() => { }}>
+                    activeOpacity={1}
+                    onPress={() => {
+                        navigation.navigate('about', {
+                            name: restaurant.name,
+                            image: restaurant.image_url,
+                            price: restaurant.price,
+                            reviews: restaurant.review_count,
+                            rating: restaurant.rating,
+                            categories: restaurant.categories,
+                        })
+                    }}>
                     < View style={styles.RestaurantItem} >
-
                         <View style={styles.RestaurantItemContainer} >
-                            <RestaurantImage />
+                            <RestaurantImage image={restaurant.image_url} />
                             <RestaurantInfo name={restaurant.name} rating={restaurant.rating} />
                         </View>
                     </View >
@@ -79,5 +90,3 @@ const RestaurantInfo = (props) => (
 
     </View>
 );
-
-export default RestaurantItem
