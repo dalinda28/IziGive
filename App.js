@@ -93,7 +93,6 @@ const App = () => {
         <Tabs.Screen name="AccountPage">
           {(props) => <AccountPage />}
         </Tabs.Screen>
-
       </Tabs.Navigator>
     </NavigationContainer >
   );

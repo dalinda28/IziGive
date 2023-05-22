@@ -1,10 +1,10 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, Text } from 'react-native'
+import React from 'react'
 
-const FavoritePage = () => {
+export default function FavoritePage() {
     return (
-        <Text>Favorite Page</Text>
+        <View>
+            <Text>FavoritePage</Text>
+        </View>
     )
 }
-
-export default FavoritePage

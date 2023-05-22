@@ -2,39 +2,62 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 import { auth } from "../../Firebase/firebase"
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
+import bcrypt from 'bcryptjs';
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isMerchant, setIsMerchant] = useState(false);
+    const [isAssociation, setIsAssociation] = useState(false);
+
+    const database = getDatabase();
+    const firestore = getFirestore();
+    const usersCollection = collection(firestore, "users");
+
+
+
 
     const signUp = async () => {
         try {
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    console.log(user.email)
-                })
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Enregistrer l'information de l'utilisateur dans la collection "users" de Firestore
+            const userDoc = doc(usersCollection, user.uid);
+            const userType = isMerchant ? 'merchant' : isAssociation ? 'association' : '';
+            const userData = {
+                email: user.email,
+                password: hashedPassword,
+                userType: userType
+            };
+
+            await setDoc(userDoc, userData);
+            console.log(userData);
+
             return navigation.navigate('Login');
-        }
-        catch (err) {
+
+        } catch (err) {
             switch (err.code) {
                 case 'auth/invalid-email':
                     return Alert.alert('Saisissez un e-mail valide');
-                    break;
                 case 'auth/email-already-in-use':
-                    return Alert.alert('Un compte IziGo associé à cet e-mail existe déja. Veuillez recommencer.');
-                    break;
+                    return Alert.alert('Un compte IziGo associé à cet e-mail existe déjà. Veuillez recommencer.');
                 case 'auth/weak-password':
                     return Alert.alert('Le mot de passe doit comprendre au moins 6 caractères.');
-                    break;
+                default:
+                    console.log(err.code);
+                    return navigation.navigate('Register');
             }
-            console.log(err.code);
-            return navigation.navigate('Register');
         }
-    }
+    };
+
 
     return (
         <View style={styles.container}>
@@ -65,7 +88,8 @@ const Register = ({ navigation }) => {
                     iconStyle={{ borderColor: "red" }}
                     innerIconStyle={{ borderWidth: 2 }}
                     textStyle={{ fontFamily: "NunitoBold", textDecorationLine: "none" }}
-                    onPress={(isChecked: boolean) => { }} />
+                    onPress={(isChecked) => setIsMerchant(isChecked)}
+                />
                 <BouncyCheckbox
                     size={25}
                     fillColor="#15AA49"
@@ -74,7 +98,7 @@ const Register = ({ navigation }) => {
                     iconStyle={{ borderColor: "red" }}
                     innerIconStyle={{ borderWidth: 2 }}
                     textStyle={{ fontFamily: "NunitoBold", textDecorationLine: "none" }}
-                    onPress={(isChecked: boolean) => { }}
+                    onPress={(isChecked) => setIsAssociation(isChecked)}
                     style={{ paddingLeft: 60 }}
                 />
             </View>
@@ -147,7 +171,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         height: "50%",
         top: "20%",
-        fontFamily: 'Roboto',
+        fontFamily: 'NunitoBold',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: 42,
