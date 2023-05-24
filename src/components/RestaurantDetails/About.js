@@ -1,16 +1,28 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, ImageBackground } from "react-native";
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/Ionicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from "react-native-vector-icons/AntDesign";
 
-const About = ({ restaurant, onBackPress }) => {
+const About = ({ restaurant, props }) => {
     const { image, name, description } = restaurant;
 
     return (
         <View>
-            <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-                <Ionicons name="arrow-back" size={24} color="black" />
-            </TouchableOpacity>
+            <View style={{ height: 220 }}>
+                <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                    <TouchableOpacity
+                        onPress={() => props.navigation.goBack()}
+                        style={{
+                            position: "absolute",
+                            left: 10,
+                            top: 30,
+                        }}
+                    >
+                        <AntDesign name="arrowleft" size={28} color="white" />
+                    </TouchableOpacity>
+                </ImageBackground>
+            </View>
             <View style={styles.RestaurantItem} >
                 <View style={styles.RestaurantItemContainer} >
                     <Image style={styles.RestaurantImage} source={{ uri: restaurant.imageUrl }} />
