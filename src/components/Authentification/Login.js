@@ -3,8 +3,15 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } fro
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { auth } from "../../Firebase/firebase"
 import { signInWithEmailAndPassword } from "firebase/auth";
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 
 const Login = ({ navigation }) => {
+
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        // androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+        iosClientId: '1029375704909-viteupa75t3p199pdnmhnd7ek8el6oi3.apps.googleusercontent.com',
+    });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -93,7 +100,7 @@ const Login = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.icon}
-                    onPress={() => onGoogleButtonPress()}>
+                    onPress={() => promptAsync()}>
                     <Ionicons name={"logo-google"} size={40} />
                 </TouchableOpacity>
                 <TouchableOpacity

@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as Location from 'expo-location';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import About from '../RestaurantDetails/About';
+import CartPage from '../../screens/CartPage';
 
 const API_TOKEN = 'dh-ilvDFreUKZR8idugS0a0JIvU7KhDE5BeasoYfyjcqsCeMAfRbEsgOkxH79XAnk7izgUXIwinpguu6HlC7M8xxIx0fIu4sdNbBnXCqBWzRFECIMB_bqGGcnWYZZHYx';
 const googlePlacesStyles = {
@@ -141,7 +141,7 @@ const Navigation = () => {
         <View style={styles.container}>
 
             {selectedRestaurant ? (
-                <About restaurant={selectedRestaurant} />
+                <CartPage />
             ) : (<View style={styles.searchContainer}>
                 <GooglePlacesAutocomplete
                     placeholder="Où allons-nous ?"
@@ -299,8 +299,6 @@ const styles = StyleSheet.create({
     bubbleImage: {
         width: 150,
         height: 100,
-        borderTopStartRadius: 20,
-        borderTopEndRadius: 20,
     },
     arrowBorder: {
         backgroundColor: "transparent",

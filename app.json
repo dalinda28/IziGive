@@ -3,9 +3,9 @@
     "name": "IziGive",
     "slug": "IziGive",
     "version": "1.0.0",
+    "userInterfaceStyle": "automatic",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "contain",
@@ -18,33 +18,41 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMotionUsageDescription": "Needs Permission for Steps"
+      },
+      "bundleIdentifier": "com.izigive.com"
     },
     "android": {
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ],
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.izigive.com"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
     },
     "plugins": [
+      "@react-native-firebase/app",
       [
-        "expo-location",
+        "expo-image-picker",
         {
-          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location."
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
-    ],
-    "permissions": {
-      "location": {
-        "allowsBackgroundLocationUpdates": false
-      }
-    }
+    ]
   }
 }
