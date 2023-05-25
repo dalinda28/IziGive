@@ -3,10 +3,14 @@ import { Image, ScrollView } from "react-native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Database } from "firebase/database";
 import MaterialCommunityIcons from "react-native-vector-icons/Ionicons";
+import Entypo from "react-native-vector-icons/Entypo";
+import { signOut } from "firebase/auth";
 
 import firebase from "firebase/app";
 import "firebase/auth";
 import { auth } from "../Firebase/firebase";
+import { showToastMessage } from "../utils";
+import { useNavigation } from "@react-navigation/native";
 
 export const localRestaurant = [
   {
@@ -37,11 +41,11 @@ export const localRestaurant = [
     rating: 4.9,
   },
 ];
-const FavoritePage = () => {
+const FavoritePage = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
   //Get a current user
-
+  const nav = useNavigation();
   const currentUser = auth.currentUser;
 
   // useEffect(() => {
@@ -83,13 +87,25 @@ const FavoritePage = () => {
           <Text style={Styles.textOffline}>
             Veuillez vous connecter pour accéder a cette fonctionnalité
           </Text>
-          <TouchableOpacity style={Styles.btnOffline}>
+          <TouchableOpacity
+            style={Styles.btnOffline}
+            onPress={() => navigation.navigate("LoginScreen")}
+          >
             <Text style={Styles.btnText}>Se connecter</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   }
+  const LogOutHandler = () => {
+    signOut(auth)
+      .then(() => {
+        showToastMessage("success", "vous etes deconnecte de l'application");
+      })
+      .catch((error) => {
+        showToastMessage("error", "Erreur");
+      });
+  };
   // const handleToggleFavorite = () => {
   //   // Ajouter ou supprimer l'élément actuel de la liste des favoris de l'utilisateur actuel dans Firebase Realtime Database
   //   const userId = firebase.auth().currentUser.uid;
@@ -108,9 +124,21 @@ const FavoritePage = () => {
   // };
   return (
     <View style={Styles.container}>
-      <Text style={Styles.textGreating}>Bonjour,</Text>
-      <Text style={Styles.textName}>{currentUser?.displayName}</Text>
-
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <View>
+          <Text style={Styles.textGreating}>Bonjour,</Text>
+          <Text style={Styles.textName}>{currentUser?.displayName}</Text>
+        </View>
+        <TouchableOpacity onPress={LogOutHandler}>
+          <Entypo name="log-out" size={30} />
+        </TouchableOpacity>
+      </View>
       <Text style={Styles.TextHeader}>Mes favoris </Text>
 
       <ScrollView showsVerticalScrollIndicator={false} style={Styles.body}>

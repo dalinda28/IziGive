@@ -54,7 +54,7 @@ const CartPage = (props) => {
         </Text>
       </View>
       <View style={{ width: "100%", borderWidth: 1, borderColor: "#D7D7D7" }} />
-      <CartItem />
+      <CartItem navigation={props.navigation} />
     </View>
   );
 };

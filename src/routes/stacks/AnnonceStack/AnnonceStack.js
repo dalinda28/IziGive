@@ -4,7 +4,10 @@ import HomePage from "../../../screens/HomePage";
 import CartPage from "../../../screens/CartPage";
 import EReceiptPage from "../../../screens/EReceiptPage";
 import Login from "../../../components/Authentification/Login";
-const HomeStack = ({ navigation }) => {
+import FavoritePage from "../../../screens/FavoritePage";
+import MyAdPage from "../../../screens/MyAdPage";
+import MyAdListPage from "../../../screens/MyAdListPage";
+const AnnonceStack = ({ navigation }) => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator
@@ -12,11 +15,10 @@ const HomeStack = ({ navigation }) => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="HomeScreen" component={HomePage} />
-      <Stack.Screen name="CartScreen" component={CartPage} />
-      <Stack.Screen name="EReceiptScreen" component={EReceiptPage} />
+      <Stack.Screen name="AnnonceDeyail" component={MyAdListPage} />
+      <Stack.Screen name="AddAnnonce" component={MyAdPage} />
     </Stack.Navigator>
   );
 };
 
-export default HomeStack;
+export default AnnonceStack;
