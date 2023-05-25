@@ -24,7 +24,7 @@ const CartItemData = [
   },
 ];
 
-const CartItem = () => {
+const CartItem = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View>
@@ -100,7 +100,10 @@ const CartItem = () => {
         ))}
       </View>
       <View style={{ marginBottom: 110, marginTop: 10 }}>
-        <TouchableOpacity style={styles.btnOffline}>
+        <TouchableOpacity
+          style={styles.btnOffline}
+          onPress={() => navigation.navigate("EReceiptScreen")}
+        >
           <Text style={styles.btnText}>FINALISER LA COMMANDE</Text>
         </TouchableOpacity>
       </View>

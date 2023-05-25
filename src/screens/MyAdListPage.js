@@ -8,42 +8,70 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomSwitch from "../components/CustomSwitch";
-export const localRestaurant = [
-  {
-    name: "Beachside Bar",
-    image_url:
-      "https://static.onecms.io/wp-content/uploads/sites/9/2020/04/24/ppp-why-wont-anyone-rescue-restaurants-FT-BLOG0420.jpg",
-    categories: ["Cafe", "Bar"],
-    price: "$$",
-    reviews: 1244,
-    rating: 4.5,
-  },
-  {
-    name: "Benihana",
-    image_url:
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdGF1cmFudCUyMGludGVyaW9yfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    categories: ["Cafe", "Bar"],
-    price: "$$",
-    reviews: 1244,
-    rating: 3.7,
-  },
-  {
-    name: "India's Grill",
-    image_url:
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdGF1cmFudCUyMGludGVyaW9yfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    categories: ["Indian", "Bar"],
-    price: "$$",
-    reviews: 700,
-    rating: 4.9,
-  },
-];
-const MyAdListPage = () => {
+
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "@firebase/firestore";
+import { auth } from "../Firebase/firebase";
+// export const localRestaurant = [
+//   {
+//     name: "Beachside Bar",
+//     image_url:
+//       "https://static.onecms.io/wp-content/uploads/sites/9/2020/04/24/ppp-why-wont-anyone-rescue-restaurants-FT-BLOG0420.jpg",
+//     categories: ["Cafe", "Bar"],
+//     price: "$$",
+//     reviews: 1244,
+//     rating: 4.5,
+//   },
+//   {
+//     name: "Benihana",
+//     image_url:
+//       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdGF1cmFudCUyMGludGVyaW9yfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
+//     categories: ["Cafe", "Bar"],
+//     price: "$$",
+//     reviews: 1244,
+//     rating: 3.7,
+//   },
+//   {
+//     name: "India's Grill",
+//     image_url:
+//       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdGF1cmFudCUyMGludGVyaW9yfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
+//     categories: ["Indian", "Bar"],
+//     price: "$$",
+//     reviews: 700,
+//     rating: 4.9,
+//   },
+// ];
+
+const MyAdListPage = ({ navigation }) => {
   const [adTab, setAdTab] = React.useState(1);
   const onSelectSwitch = (value) => {
     setAdTab(value);
   };
+  const [annonces, setAnnonces] = useState([]);
+  const currentUser = auth.currentUser;
+
+  const firestore = getFirestore();
+  useEffect(() => {
+    const q = query(
+      collection(firestore, "annonces"),
+      where("userId", "==", currentUser.uid)
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const annonces = [];
+      querySnapshot.forEach((doc) => {
+        annonces.push(doc.data());
+      });
+      setAnnonces(annonces);
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <View style={Styles.container}>
@@ -60,7 +88,7 @@ const MyAdListPage = () => {
       </View>
       {adTab == 1 && (
         <ScrollView showsVerticalScrollIndicator={false} style={Styles.body}>
-          {localRestaurant.map((restaurant, index) => (
+          {annonces?.map((restaurant, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => {}}
@@ -70,13 +98,15 @@ const MyAdListPage = () => {
                 <View style={Styles.RestaurantItemContainer}>
                   <Image
                     source={{
-                      uri: restaurant.image_url,
+                      uri: restaurant?.image_url,
                     }}
                     style={Styles.RestaurantImage}
                   />
                   <RestaurantInfo
-                    name={restaurant.name}
+                    navigation={navigation}
+                    name={restaurant.annonceName}
                     rating={restaurant.rating}
+                    description={restaurant?.description}
                   />
                 </View>
               </View>
@@ -90,6 +120,7 @@ const MyAdListPage = () => {
             }}
           >
             <TouchableOpacity
+              onPress={() => navigation.navigate("AddAnnonce")}
               style={{
                 marginBottom: 130,
                 justifyContent: "center",
@@ -107,7 +138,7 @@ const MyAdListPage = () => {
       )}
       {adTab == 2 && (
         <ScrollView showsVerticalScrollIndicator={false} style={Styles.body}>
-          {localRestaurant.slice(1, 2).map((restaurant, index) => (
+          {annonces.slice(1, 2).map((restaurant, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => {}}
@@ -122,8 +153,9 @@ const MyAdListPage = () => {
                     style={Styles.RestaurantImage}
                   />
                   <RestaurantInfo
-                    name={restaurant.name}
-                    rating={restaurant.rating}
+                    name={restaurant?.annonceName}
+                    rating={restaurant?.rating}
+                    description={restaurant?.description}
                   />
                 </View>
               </View>
@@ -140,7 +172,7 @@ const RestaurantInfo = (props) => (
     <View>
       <Text style={{ fontSize: 15, fontWeight: "bold" }}>{props.name}</Text>
       <Text style={{ fontSize: 13, color: "gray", marginTop: 10 }}>
-        30-45 • min
+        {props.description}
       </Text>
     </View>
 

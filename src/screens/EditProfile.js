@@ -25,13 +25,14 @@ const EditProfile = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const userType = "Commercant";
   const handleUpdateProfile = () => {
     // Mettre à jour les informations de profil de l'utilisateur dans Firebase
 
     updateProfile(currentUser, {
       displayName: name,
       email: email,
+      userType: userType,
       password: password,
       photoURL: selectedImage,
     })
@@ -49,8 +50,6 @@ const EditProfile = ({ navigation }) => {
         );
       });
   };
-
-  console.log("CurrentUser Is ", currentUser);
 
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

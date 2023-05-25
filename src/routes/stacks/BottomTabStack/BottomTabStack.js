@@ -12,6 +12,8 @@ import EditProfile from "../../../screens/EditProfile";
 import EReceiptPage from "../../../screens/EReceiptPage";
 import Navigation from "../../../components/Navigation/Navigation";
 import MyAdListPage from "../../../screens/MyAdListPage";
+import FavoriteStack from "../FavoriteStack/FavoriteStack";
+import AnnonceStack from "../AnnonceStack/AnnonceStack";
 
 const Tabs = createBottomTabNavigator();
 
@@ -67,14 +69,14 @@ const BottomTabStack = () => {
       <Tabs.Screen name="HomePage">{(props) => <HomeStack />}</Tabs.Screen>
       <Tabs.Screen name="NavigatePage">{(props) => <Navigation />}</Tabs.Screen>
       <Tabs.Screen name="FavoritePage">
-        {(props) => <FavoritePage />}
+        {(props) => <FavoriteStack />}
       </Tabs.Screen>
       <Tabs.Screen name="AccountPage">
         {(props) => <AuthentificationStack />}
       </Tabs.Screen>
       {/* <Tabs.Screen name="E-Receipt">{(props) => <EReceiptPage />}</Tabs.Screen> 
       <Tabs.Screen name="MyAddListPage">
-        {(props) => <MyAdListPage />}
+        {(props) => <AnnonceStack />}
       </Tabs.Screen>*/}
       {/* <Tabs.Screen name="Profile">{(props) => <EditProfile />}</Tabs.Screen> */}
     </Tabs.Navigator>

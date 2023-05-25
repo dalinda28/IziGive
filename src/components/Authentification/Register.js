@@ -10,11 +10,10 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
 import { auth } from "../../Firebase/firebase";
-import { getFirestore, collection, doc, setDoc } from "@firebase/firestore";
 import bcrypt from "bcryptjs";
+import { getDatabase, ref, set } from "firebase/database";
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -35,14 +34,14 @@ const Register = ({ navigation }) => {
                 password
             );
             const user = userCredential.user;
-
+            console.log(user)
             const hashedPassword = await bcrypt.hash(password, 10);
 
             // Enregistrer l'information de l'utilisateur dans la collection "users" de Firestore
             const userDoc = doc(usersCollection, user.uid);
-            const userType = isMerchant
+            const userType = selectedOption === "merchant"
                 ? "merchant"
-                : isAssociation
+                : selectedOption === "association"
                     ? "association"
                     : "";
             const userData = {
@@ -61,7 +60,7 @@ const Register = ({ navigation }) => {
                     return Alert.alert("Saisissez un e-mail valide");
                 case "auth/email-already-in-use":
                     return Alert.alert(
-                        "Un compte IziGo associé à cet e-mail existe déjà. Veuillez recommencer."
+                        "Un compte IziGive associé à cet e-mail existe déjà. Veuillez recommencer."
                     );
                 case "auth/weak-password":
                     return Alert.alert(
@@ -103,7 +102,14 @@ const Register = ({ navigation }) => {
                     iconStyle={{ borderColor: "red" }}
                     innerIconStyle={{ borderWidth: 2 }}
                     textStyle={{ fontFamily: "NunitoBold", textDecorationLine: "none" }}
-                    onPress={(isChecked) => setIsMerchant(isChecked)}
+                    onPress={(isChecked) => {
+                        if (isChecked) {
+                            setIsMerchant(true);
+                            setIsAssociation(false);
+                        } else {
+                            setIsMerchant(false);
+                        }
+                    }}
                 />
                 <BouncyCheckbox
                     size={25}
@@ -113,7 +119,14 @@ const Register = ({ navigation }) => {
                     iconStyle={{ borderColor: "red" }}
                     innerIconStyle={{ borderWidth: 2 }}
                     textStyle={{ fontFamily: "NunitoBold", textDecorationLine: "none" }}
-                    onPress={(isChecked) => setIsAssociation(isChecked)}
+                    onPress={(isChecked) => {
+                        if (isChecked) {
+                            setIsMerchant(true);
+                            setIsAssociation(false);
+                        } else {
+                            setIsMerchant(false);
+                        }
+                    }}
                     style={{ paddingLeft: 60 }}
                 />
             </View>

@@ -4,7 +4,8 @@ import HomePage from "../../../screens/HomePage";
 import CartPage from "../../../screens/CartPage";
 import EReceiptPage from "../../../screens/EReceiptPage";
 import Login from "../../../components/Authentification/Login";
-const HomeStack = ({ navigation }) => {
+import FavoritePage from "../../../screens/FavoritePage";
+const FavoriteStack = ({ navigation }) => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator
@@ -12,11 +13,10 @@ const HomeStack = ({ navigation }) => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="HomeScreen" component={HomePage} />
-      <Stack.Screen name="CartScreen" component={CartPage} />
-      <Stack.Screen name="EReceiptScreen" component={EReceiptPage} />
+      <Stack.Screen name="FavoriteScreen" component={FavoritePage} />
+      <Stack.Screen name="LoginScreen" component={Login} />
     </Stack.Navigator>
   );
 };
 
-export default HomeStack;
+export default FavoriteStack;

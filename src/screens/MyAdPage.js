@@ -4,19 +4,47 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
-
+import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import moment from "moment";
+import { getFirestore, collection, doc, setDoc } from "@firebase/firestore";
 import { TextField } from "../components/TextField";
+import { auth } from "../Firebase/firebase";
+import { showToastMessage } from "../utils";
 const MyAdPage = () => {
+  const [productName, setProductName] = useState("");
+  const [selectedImage, setSelectedImage] = useState("");
+  const [description, setDescription] = useState();
+  const [rdvPlace, setRDVPlace] = useState();
+  const [availablity, setAvailablity] = useState();
+
   const [selectedDate, setSelectedDate] = useState();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [value, onChangeText] = React.useState("Useless Multiline Placeholder");
+  const [quantity, setQuantity] = useState(1);
+
+  const firestore = getFirestore();
+  const annonceCollection = collection(firestore, "annonces");
+
+  const currentUser = auth.currentUser;
+
+  //Reset all fields
+
+  const ResetFields = () => {
+    setProductName(null);
+    setSelectedImage(null);
+    setSelectedDate(null);
+    setRDVPlace(null);
+    setAvailablity(null);
+    setQuantity(1);
+    setDescription(null);
+  };
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -31,17 +59,60 @@ const MyAdPage = () => {
     hideDatePicker();
   };
 
-  const onSelectSwitch = (value) => {
-    setAdTab(value);
+  const handleIncrement = () => {
+    setQuantity(quantity + 1);
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+  const handleImageSelection = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+
+  const HandlerSubmit = async () => {
+    try {
+      const annonceDoc = doc(annonceCollection);
+      const annonceData = {
+        annonceName: productName,
+        description,
+        date: selectedDate,
+        appointment: rdvPlace,
+        availablity,
+        userId: currentUser.uid,
+        quantity,
+        image_url: selectedImage,
+      };
+      await setDoc(annonceDoc, annonceData);
+      showToastMessage("success", "ajouter avec succès");
+      ResetFields();
+    } catch (error) {
+      showToastMessage("error", "erreur lors de l'enregistrement");
+    }
   };
 
   return (
-    <View style={Styles.container}>
+    <ScrollView style={Styles.container}>
       <View>
         <Text style={Styles.TextHeader}>Mes annonces</Text>
       </View>
       <View>
-        <TextField placeholder="Nom du produit" />
+        <TextField
+          placeholder="Nom du produit"
+          value={productName}
+          onTextChange={setProductName}
+        />
         {/* <TextField placeholder="Description" /> */}
         <View style={Styles.multiLineInput}>
           <TextInput
@@ -53,7 +124,8 @@ const MyAdPage = () => {
             placeholder={"Description"}
             blurOnSubmit={true}
             autoCapitalize="none"
-            onChangeText={() => console.log("hello guys")}
+            value={description}
+            onChangeText={(text) => setDescription(text)}
           />
         </View>
         <View
@@ -61,7 +133,7 @@ const MyAdPage = () => {
             flexDirection: "row",
             borderColor: "#989898",
             borderWidth: 1,
-            backgroundColor: "#EEEEEE",
+            backgroundColor: "white",
             marginTop: 10,
             padding: 14,
             maxHeight: 50,
@@ -91,17 +163,74 @@ const MyAdPage = () => {
           </TouchableOpacity>
         </View>
 
-        <TextField placeholder="Lieu du rendez vous" />
-        <TextField placeholder="Disponibilité" />
+        <TextField
+          placeholder="Lieu du rendez vous"
+          value={rdvPlace}
+          onTextChange={setRDVPlace}
+        />
+        <TextField
+          placeholder="Disponibilité"
+          value={availablity}
+          onTextChange={setAvailablity}
+        />
         <View style={{ marginTop: 15, paddingHorizontal: 10 }}>
           <View style={Styles.contentDetail}>
             <Text style={Styles.intitule}>Quantité</Text>
 
-            <Text style={Styles.description}>Carrefour city</Text>
+            <View style={{ width: "30%", flexDirection: "row" }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#424B5A",
+                  paddingHorizontal: 10,
+                  paddingVertical: 4,
+                }}
+                onPress={handleDecrement}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 15,
+                  }}
+                >
+                  -
+                </Text>
+              </TouchableOpacity>
+              <View>
+                <Text
+                  style={{
+                    backgroundColor: "#EBEBEB",
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                  }}
+                >
+                  {quantity}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#424B5A",
+                  paddingHorizontal: 10,
+                  paddingVertical: 4,
+                }}
+                onPress={handleIncrement}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 15,
+                  }}
+                >
+                  +
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={Styles.contentDetail}>
             <Text style={Styles.intitule}>Ajouter une photo</Text>
-            <AntDesign name="picture" size={30} />
+            <TouchableOpacity onPress={handleImageSelection}>
+              <AntDesign name="picture" size={30} />
+              <Text>{selectedImage}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -122,13 +251,14 @@ const MyAdPage = () => {
             borderRadius: 20,
             backgroundColor: "#15AA49",
           }}
+          onPress={HandlerSubmit}
         >
           <Text style={{ color: "white", fontSize: 20, fontWeight: "700" }}>
             Valider
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -198,7 +328,7 @@ const Styles = StyleSheet.create({
   multiLineInput: {
     borderColor: "#989898",
     borderWidth: 1,
-    backgroundColor: "#EEEEEE",
+    backgroundColor: "white",
     marginTop: 10,
     padding: 10,
     maxHeight: 80,
