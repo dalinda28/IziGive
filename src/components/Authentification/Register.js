@@ -18,6 +18,7 @@ import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const [error, setError] = useState("");
     const [isMerchant, setIsMerchant] = useState(false);
     const [isAssociation, setIsAssociation] = useState(false);

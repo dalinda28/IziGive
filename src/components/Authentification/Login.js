@@ -16,7 +16,6 @@ const Login = ({ navigation }) => {
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    console.log(user.email)
                 });
             return navigation.navigate('HomePage');
         }
